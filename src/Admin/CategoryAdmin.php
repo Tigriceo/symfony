@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: skillup_student
- * Date: 03.07.19
- * Time: 19:39
- */
 
 namespace App\Admin;
 
@@ -13,16 +7,15 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 
-
 class CategoryAdmin extends AbstractAdmin
 {
 
     protected function configureListFields(ListMapper $list)
     {
-       $list
-           ->addIdentifier('id')
-           ->addIdentifier('name')
-       ;
+        $list
+            ->addIdentifier('id')
+            ->addIdentifier('name')
+        ;
     }
 
     protected function configureDatagridFilters(DatagridMapper $filter)
@@ -35,11 +28,9 @@ class CategoryAdmin extends AbstractAdmin
 
     protected function configureFormFields(FormMapper $form)
     {
-       $form
-           ->add('id')
-           ->add('name')
-       ;
+        $form
+            ->add('name')
+        ;
     }
-
 
 }
