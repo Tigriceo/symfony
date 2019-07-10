@@ -15,4 +15,4 @@ framework:
     php_errors:
         log: true
 
-    translator: {fallbacks:['%locale%']}
+    translator: { fallbacks: ['%locale%'] }
