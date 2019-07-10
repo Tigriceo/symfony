@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationType;
+use App\Service\RegistrationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,10 +49,7 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hash = $encoder->encodePassword($user, $user->getPlainPassword());
-            $user->setPassword($hash);
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $registrationService->createUser($user);
 
             return $this->redirectToRoute('security_register_success');
         }
@@ -69,4 +67,13 @@ class SecurityController extends AbstractController
         return $this->render('security/register_success.html.twig');
     }
 
+    /**
+     * @Route("/register/confirm/{emailCheckCode}" , name="security_confirm_email")
+     */
+    public function  confirmEmail(User $user, RegistrationService $registrationService)
+    {
+        $registrationService->confirmEmail($user);
+
+        return $this->render('security/email_confirmed.html.twig');
+    }
 }

@@ -3,11 +3,14 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="users")
+ * @UniqueEntity(fields={"email"}, message="Пользователь с таким адресом зарегистрирован")
  */
 class User implements UserInterface
 {
@@ -20,6 +23,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assets\NotBlank()
+     * @Assets\Email(checkHost=true, checkMX=true)
      */
     private $email;
 
@@ -36,6 +41,8 @@ class User implements UserInterface
 
     /**
      * @var string|null
+     * @Assets\NotBlank()
+     * @Assets\Length(min="5")
      */
     private $plainPassword;
 
@@ -46,6 +53,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assets\NotBlank()
      */
     private $lastName;
 
@@ -53,6 +61,21 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=1000, nullable=true)
      */
     private $address;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": 0})
+     */
+    private $шisEmailChecked;
+
+    public function  __construct()
+    {
+        $this->isEmailChecked = false;
+    }
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $emailCheckCode;
 
     public function getId(): ?int
     {
@@ -156,6 +179,11 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getFullName(): string
+    {
+        return $this->firstName . ' ' . $this->lastName;
+    }
+
     public function getAddress(): ?string
     {
         return $this->address;
@@ -177,5 +205,30 @@ class User implements UserInterface
     {
         $this->plainPassword = $plainPassword;
     }
+
+    public function getшisEmailChecked(): ?string
+    {
+        return $this->шisEmailChecked;
+    }
+
+    public function setшisEmailChecked(string $шisEmailChecked): self
+    {
+        $this->шisEmailChecked = $шisEmailChecked;
+
+        return $this;
+    }
+
+    public function getEmailCheckCode(): ?string
+    {
+        return $this->emailCheckCode;
+    }
+
+    public function setEmailCheckCode(string $emailCheckCode): self
+    {
+        $this->emailCheckCode = $emailCheckCode;
+
+        return $this;
+    }
+
 
 }
