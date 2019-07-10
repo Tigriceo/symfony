@@ -16,7 +16,7 @@ class DefaultController extends AbstractController
     {
         $products = $productRepository->findby(
             ['isTop' => true],
-            ['name'  => 'ASC']
+            ['name' => 'ASC']
         );
 
         return $this->render(
