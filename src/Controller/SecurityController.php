@@ -5,12 +5,10 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationType;
 use App\Service\RegistrationService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -41,8 +39,7 @@ class SecurityController extends AbstractController
      */
     public function register(
         Request $request,
-        UserPasswordEncoderInterface $encoder,
-        EntityManagerInterface $entityManager
+        RegistrationService $registrationService
     ) {
         $user = new User();
         $form = $this->createForm(RegistrationType::class, $user);
@@ -68,12 +65,13 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/register/confirm/{emailCheckCode}" , name="security_confirm_email")
+     * @Route("/register/confirm/{emailCheckCode}", name="security_confirm_email")
      */
-    public function  confirmEmail(User $user, RegistrationService $registrationService)
+    public function confirmEmail(User $user, RegistrationService $registrationService)
     {
         $registrationService->confirmEmail($user);
 
         return $this->render('security/email_confirmed.html.twig');
     }
+
 }

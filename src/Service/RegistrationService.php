@@ -1,79 +1,69 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: skillup_student
- * Date: 10.07.19
- * Time: 19:52
- */
 
 namespace App\Service;
 
-
-use Doctrine\ORM\EntityManager;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\NamedAddress;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 
 class RegistrationService
 {
+
     /**
      * @var EntityManagerInterface
      */
-    private $entityManger;
+    private $entityManager;
 
     /**
      * @var UserPasswordEncoderInterface
      */
-
-
-
     private $passwordEncoder;
 
     /**
      * @var MailerInterface
      */
+    private $mailer;
 
-    public function __construct (
-
+    public function __construct(
         EntityManagerInterface $entityManager,
         UserPasswordEncoderInterface $passwordEncoder,
         MailerInterface $mailer
-) {
+    ) {
         $this->entityManager = $entityManager;
-        $this->passwordEncoder =$passwordEncoder;
+        $this->passwordEncoder = $passwordEncoder;
         $this->mailer = $mailer;
-}
- public function createUser(User $user)
-   {
-    $hash = $encoder->encodePassword($user, $user->getPlainPassword());
-    $user->setPassword($hash);
-    $user->setEmailCheckCode(md5(random_bytes(32)));
-    $entityManager->persist($user);
-    $entityManager->flush();
+    }
 
-    $this->sendEmailConfirmationMassege(User $user)
-   }
+    public function createUser(User $user)
+    {
+        $hash = $this->passwordEncoder->encodePassword($user, $user->getPlainPassword());
+        $user->setPassword($hash);
+        $user->setEmailCheckCode(md5(random_bytes(32)));
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
+        $this->sendEmailConfirmationMessage($user);
+    }
 
-   public function confirmEmail(User $user)
-   {
-       $user->setIsEmailChecked(true);
-       $user->setEmailCheckCode(null);
-       $this->entityManager->flush();
-   }
+    public function confirmEmail(User $user)
+    {
+        $user->setIsEmailChecked(true);
+        $user->setEmailCheckCode(null);
+        $this->entityManager->flush();
+    }
 
+    private function sendEmailConfirmationMessage(User $user)
+    {
+        $message = new TemplatedEmail();
+        $message->to(new NamedAddress($user->getEmail(), $user->getFullName()));
+        $message->from('noreply@shop.com');
+        $message->subject('Подтверждение регистрации на сайте');
+        $message->htmlTemplate('security/emails/confirmation.html.twig');
+        $message->context(['user' => $user]);
+        $this->mailer->send($message);
+    }
 
-   private function sendEmailConfirmationMessage(User $user)
-   {
-       $massege = new  TemplatedEmail();
-       $massege->to( new NamedAddress($user->getEmail(), $user->getFullName)))
-       $massege->from('noreply@shop.com');
-       $massege->subject('Подтверджение регистрации на сайте');
-       $massege->htmlTemplate('security/emails/confirmation.html.twig');
-       $massege->context(['user' => $user]);
-       $this->mailer->send($massege);
-   }
 }

@@ -1,0 +1,26 @@
+body {
+    background-color: bisque;
+
+}
+
+.article1 {
+    background: white;
+    padding-top: 50px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 50px;
+}
+
+h1 {
+    color: royalblue;
+    font-family: 'Lobster', cursive;
+}
+
+h2 {
+    color: darkgreen;
+    font-family: 'Lobster', cursive;
+}
+P{
+    font-size: 20px;
+    color: darkslategray
+}
