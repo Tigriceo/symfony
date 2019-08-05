@@ -42,7 +42,9 @@
             </form>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" id="header-cart" href="{{ path('order_cart') }}">{{ render(controller('App\\Controller\\OrderController::headerCart')) }}</a>
+                    <a class="nav-link" id="header-cart" href="{{ path('order_cart') }}">
+                        {{ render(controller('App\\Controller\\OrderController::headerCart')) }}
+                    </a>
                 </li>
             </ul>
         </div>

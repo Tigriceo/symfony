@@ -17,7 +17,7 @@ addToCardButtons.forEach((button)) => {
             return response.text();
         })
         .then((body) => {
-        alert(body);
+           document.getElementById('header-cart').innerHTML = body;
         })
     });
 });
